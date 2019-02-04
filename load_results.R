@@ -10,6 +10,8 @@ results = list()
 results_no = list()
 results_low = list()
 results_high = list()
+results_low_with_feedback = list()
+results_high_with_feedback = list()
 
 files = c(
   list.files("with-retest", pattern="\\.json$", full.names = TRUE), 
@@ -25,15 +27,19 @@ for (file in files) {
     results_low[length(results_low) + 1] <- list(list)
   } else if (list$distraction == 'HighDistraction') {
     results_high[length(results_high) + 1] <- list(list)
+  } else if (list$distraction == 'LowDistractionWithFeedback') {
+    results_low_with_feedback[length(results_low_with_feedback) + 1] <- list(list)
+  } else if (list$distraction == 'HighDistractionWithFeedback') {
+    results_high_with_feedback[length(results_high_with_feedback) + 1] <- list(list)
   }
 }
 
 for (i in 1:length(results)) {
   if (results[[i]]$distraction == 'NoDistraction') {
     color = 'lightgreen'
-  } else if (results[[i]]$distraction == 'LowDistraction') {
+  } else if (results[[i]]$distraction == 'LowDistraction' || results[[i]]$distraction == 'LowDistractionWithFeedback') {
     color = 'lightyellow'
-  } else if (results[[i]]$distraction == 'HighDistraction') {
+  } else if (results[[i]]$distraction == 'HighDistraction' || results[[i]]$distraction == 'HighDistractionWithFeedback') {
     color = 'lightpink'
   }
   results[[i]]$color <- color

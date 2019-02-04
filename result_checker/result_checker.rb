@@ -3,7 +3,7 @@ require './common.rb'
 require 'ap'
 
 recognize_template = {}
-[*0..11,13].map(&:to_s).each do |subset|
+[*0..11].map(&:to_s).each do |subset| # for retest, do [*0..11,13]
 	recognize_template[subset] = {}
 	(0..19).map(&:to_s).each do |i|
 		recognize_template[subset][i] = {'digit' => nil, 'displayed_pattern' => Array, 'user_answer' => nil, 'correct' => nil, 'pattern_distance' => nil, 'time_elapsed' => Float, 'repetitions' => Fixnum}
@@ -11,7 +11,7 @@ recognize_template = {}
 end
 
 construct_template = {}
-[*0..11,13].map(&:to_s).each do |subset|
+[*0..11].map(&:to_s).each do |subset| # for retest, do [*0..11,13]
 	construct_template[subset] = {}
 	(0..9).map(&:to_s).each do |i|
 		construct_template[subset][i] = {'digit' => Fixnum, 'correct_answer' => Array, 'user_answer' => Array, 'correct' => nil, 'distance' => nil, 'time_elapsed' => Float, 'repetitions' => Fixnum}
@@ -20,7 +20,7 @@ end
 
 common_test_results = {
 	'armband_test_wrongs_0' => Fixnum,
-	'armband_test_wrongs_1' => Fixnum,
+#	'armband_test_wrongs_1' => Fixnum, # for retest
 	'recognize' => recognize_template,
 	'construct' => construct_template
 }
@@ -30,7 +30,7 @@ common = {
 	'pattern' => {'0' => Array, '1' => Array, '2' => Array, '3' => Array, '4' => Array, '5' => Array, '6' => Array, '7' => Array, '8' => Array, '9' => Array },
 	'survey_pre_results' => {'birth_year' => Fixnum, 'gender' => GENDERS},
 	'emailadress' => String,
-	'survey_post_retest_results' => POST_RETEST_QUESTIONS.map {|i| [i, Fixnum]}.to_h.merge({'comment' => String})
+#	'survey_post_retest_results' => POST_RETEST_QUESTIONS.map {|i| [i, Fixnum]}.to_h.merge({'comment' => String}) # for retest
 }
 
 template = {
@@ -55,10 +55,28 @@ template = {
 			}
 		}),
 		'survey_post_results' => HIGH_DISTRACTION_QUESTIONS.map {|i| [i, Fixnum]}.to_h.merge({'comment' => String})
-	})
+	}),
+	
+	'LowDistractionWithFeedback' => common.merge({
+		'test_results' => common_test_results.merge({
+			'distraction' => {
+				'gweled_score' => [*0..11].map {|i| [i.to_s, Fixnum]}.to_h
+			}
+		}),
+		'survey_post_results' => LOW_DISTRACTION_QUESTIONS.map {|i| [i, Fixnum]}.to_h.merge({'comment' => String})
+	}),
+	
+	'HighDistractionWithFeedback' => common.merge({
+		'test_results' => common_test_results.merge({
+			'distraction' => {
+				'open_hexagon_score' => [*0..11].map {|i| [i.to_s, Fixnum]}.to_h
+			}
+		}),
+		'survey_post_results' => HIGH_DISTRACTION_QUESTIONS.map {|i| [i, Fixnum]}.to_h.merge({'comment' => String})
+	}),
 }
 
-def checkHash template, hash, before=''
+def checkHash template, hash, before='/'
 	return nil if template.nil?
 	return nil if template == hash
 	return nil if Class === template && template === hash
@@ -67,19 +85,19 @@ def checkHash template, hash, before=''
 		msg = []
 		template.each do |key, value|
 			if hash.keys.include?(key)
-				msg.push checkHash(value, hash[key], before + '/' + key)
+				msg.push checkHash(value, hash[key], before + key + '/')
 			else
 				msg.push before.to_s + ' - missing key: ' + key.to_s
 			end
 		end
 		return msg.select {|i| !i.nil? && i != []}.flatten
 	else
-		return before.to_s + ' - no handler:  ' + hash.class
+		return before.to_s + ' - no handler:  ' + hash.class.to_s + (hash.class == String ? ': ' + hash : '')
 	end
 end
 
 
-RESULT_FILES_WITH_RETEST.each do |file|
+RESULT_FILES_NO_RETEST.sort.each do |file|
 	hash = JSON.parse(File.read(file))
 	result = checkHash(template[hash['distraction']], hash)
 	if result != []

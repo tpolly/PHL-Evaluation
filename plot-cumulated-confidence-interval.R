@@ -60,7 +60,7 @@ mrd_with_null_patterns <- function(results) {
   
   df <- data.frame(matrix(
     unlist(mean_recognize_distance_no_retest),
-    nrow = 10,
+    nrow = length(results),
     byrow = TRUE
   ))
   
@@ -94,7 +94,7 @@ mrd <- function(results) {
   
   df <- data.frame(matrix(
     unlist(mean_recognize_distance_no_retest),
-    nrow = 10,
+    nrow = length(results),
     byrow = TRUE
   ))
   
@@ -119,7 +119,7 @@ mcd <- function(results) {
   
   df <- data.frame(matrix(
     unlist(mean_construct_distance_no_retest),
-    nrow = 10,
+    nrow = length(results),
     byrow = TRUE
   ))
   
@@ -153,7 +153,7 @@ mrplc <- function(results) { # mean recognize pattern length correct
   
   df <- data.frame(matrix(
     unlist(mean_recognize_distance_no_retest),
-    nrow = 10,
+    nrow = length(results),
     byrow = TRUE
   ))
   
@@ -171,7 +171,7 @@ mccpl <- function(results) { # mean recall correct pattern's lengths
   } )})
   return(data.frame(matrix(
     unlist(map(a, function(s) {list.remove(s, 13)})),
-    nrow = 10,
+    nrow = length(results),
     byrow = TRUE
   )))
 }
@@ -196,7 +196,7 @@ meanscore <- function(results) {
 lightcolor <- function(dist) {
   if (dist == "no") {
     return("palegreen")
-  } else if (dist == "low") {
+  } else if (dist == "low" || dist == "low_with_feedback") {
     return("lightyellow")
   } else {
     return("lightpink")
@@ -206,7 +206,7 @@ lightcolor <- function(dist) {
 darkcolor <- function(dist) {
   if (dist == "no") {
     return("green3")
-  } else if (dist == "low") {
+  } else if (dist == "low" || dist == "low_with_feedback") {
     return("yellow4")
   } else {
     return("red2")
@@ -220,6 +220,10 @@ group <- function(dist) {
     return("A")
   } else if (dist == "high") {
     return("B")
+  } else if (dist == "low_with_feedback") {
+    return("A-F")
+  } else if (dist == "high_with_feedback") {
+    return ("B-F")
   } else {
     stop("bad dist")
   }
@@ -230,12 +234,19 @@ results_h <- function(dist) { # R is stupid. Can't get it to work with a list
     return(results_no)
   } else if (dist == "low") {
     return(results_low)
-  } else {
+  } else if (dist == "high") {
     return(results_high)
+  } else if (dist == "low_with_feedback") {
+    return(results_low_with_feedback)
+  } else if (dist == "high_with_feedback") {
+    return(results_high_with_feedback)
+  } else {
+    stop("bad dist")
   }
 }
 
-for (dist in c("no", "low", "high")) {
+for (dist in c("no", "low", "high", "low_with_feedback", "high_with_feedback")) {
+#for (dist in c("low_with_feedback")) {
   setwd("/opt/BA/Evaluation/plots")
   # recognize
   pdf(file = paste0(dist, "_dist_recognize_with_nonsense.pdf"))

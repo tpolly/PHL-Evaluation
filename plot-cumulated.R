@@ -1,4 +1,5 @@
 #!/usr/bin/env Rscript
+setwd("/opt/BA/Results")
 source('load_results.R')
 
 # TODO: use rlist to filter nulls in pattern_distance or say that null means max distance = length

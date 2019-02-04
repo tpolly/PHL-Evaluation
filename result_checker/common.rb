@@ -3,7 +3,7 @@ require 'json'
 require 'awesome_print'
 PATH = File.expand_path(File.dirname(__FILE__))
 
-DISTRACTIONS = ['LowDistraction', 'HighDistraction', 'NoDistraction']
+DISTRACTIONS = ['LowDistraction', 'HighDistraction', 'NoDistraction', 'LowDistractionWithFeedback', 'HighDistractionWithFeedback']
 
 GENDERS = ['männlich', 'weiblich', 'keine Angabe']
 
@@ -40,7 +40,7 @@ POST_RETEST_QUESTIONS = [
 	'Die Auflösung war für mich wenig überraschend.',
 ]
 
-RESULT_FILES_WITH_RETEST = Dir.glob(PATH + "/../Results/with-retest/*.json")
-RESULT_FILES_NO_RETEST = Dir.glob(PATH + "/../Results/no-retest/*.json")
-RESULT_FILES_TODO_RETEST = Dir.glob(PATH + "/../Results/todo-retest/*.json")
+RESULT_FILES_WITH_RETEST = Dir.glob(PATH + "/../../Results/with-retest/*.json")
+RESULT_FILES_NO_RETEST = Dir.glob(PATH + "/../../Results/no-retest/*.json")
+RESULT_FILES_TODO_RETEST = Dir.glob(PATH + "/../../Results/todo-retest/*.json")
 RESULT_FILES_ALL = RESULT_FILES_WITH_RETEST + RESULT_FILES_NO_RETEST + RESULT_FILES_TODO_RETEST
