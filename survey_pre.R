@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 setwd("/opt/BA/Evaluation")
 source('load_results.R')
-library(vioplot)
+#library(vioplot)
 
 age <- map(results, function(list) {2018 - list$survey_pre_results$birth_year})
 age_high <- map(results_high, function(list) {2018 - list$survey_pre_results$birth_year})
