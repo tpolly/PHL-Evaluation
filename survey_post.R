@@ -34,6 +34,27 @@ survey_motivation_n <- map(results_no, function(list) {list$survey_post_results$
 survey_recognize_n  <- map(results_no, function(list) {list$survey_post_results$`Ich konnte im Test die Muster gut erkennen.`})
 survey_recall_n     <- map(results_no, function(list) {list$survey_post_results$`Ich konnte im Test die Muster gut wiedergeben.`})
 
+survey_too_strong_l_fb <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Die Vibration war zu stark.`})
+survey_too_weak_l_fb   <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Die Vibration war zu schwach.`})
+survey_annoying_l_fb   <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Die Vibration war störend/unangenehm.`})
+survey_discern_l_fb    <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Lange und kurze Vibrationen waren gut zu unterscheiden.`})
+survey_audible_l_fb    <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Ich konnte das Summen der Vibrationsmotoren hören.`})
+survey_audib_help_l_fb <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Das Summen der Motoren zu Hören hat mir bei der Wahrnehmung der Muster geholfen.`})
+survey_motivation_l_fb <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Ich war motiviert, die Muster bestmöglichst zu lernen.`})
+survey_recognize_l_fb  <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Ich konnte im Test die Muster gut erkennen.`})
+survey_recall_l_fb     <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Ich konnte im Test die Muster gut wiedergeben.`})
+
+survey_too_strong_h_fb <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Die Vibration war zu stark.`})
+survey_too_weak_h_fb   <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Die Vibration war zu schwach.`})
+survey_annoying_h_fb   <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Die Vibration war störend/unangenehm.`})
+survey_discern_h_fb    <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Lange und kurze Vibrationen waren gut zu unterscheiden.`})
+survey_audible_h_fb    <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Ich konnte das Summen der Vibrationsmotoren hören.`})
+survey_audib_help_h_fb <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Das Summen der Motoren zu Hören hat mir bei der Wahrnehmung der Muster geholfen.`})
+survey_motivation_h_fb <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Ich war motiviert, die Muster bestmöglichst zu lernen.`})
+survey_recognize_h_fb  <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Ich konnte im Test die Muster gut erkennen.`})
+survey_recall_h_fb     <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Ich konnte im Test die Muster gut wiedergeben.`})
+
+
 pdf(file = "plots/survey_common_low.pdf", width = 6.5)
 par(las=1, oma=c(2,18,0,0))
 plot(0:1, 0:1, xlim=c(1,5), ylim=range(0,10), type="n", axes=FALSE, ann=FALSE)
@@ -62,6 +83,24 @@ axis(side=1,at=1:5,labels=c("agree", "weak agree", "neutral", "weak disagree", "
 text(3,11,"Group C", xpd = TRUE, cex = 1.1, font=2, adj = 0.5)
 dev.off()
 
+pdf(file = "plots/survey_common_low_with_feedback.pdf", width = 2.9)
+par(las=1, oma=c(2,0,0,0))
+plot(0:1, 0:1, xlim=c(1,5), ylim=range(0,10), type="n", axes=FALSE, ann=FALSE)
+vioplot(unlist(survey_recall_l_fb), unlist(survey_recognize_l_fb), unlist(survey_motivation_l_fb), unlist(survey_audib_help_l_fb), unlist(survey_audible_l_fb),
+        unlist(survey_discern_l_fb), unlist(survey_annoying_l_fb),unlist(survey_too_weak_l_fb), unlist(survey_too_strong_l_fb), horizontal = TRUE, col='lightyellow', add = TRUE)
+axis(side=1,at=1:5,labels=c("agree", "weak agree", "neutral", "weak disagree", "disagree"), las = 2)
+text(3,11,"Group A-F", xpd = TRUE, cex = 1.1, font = 2, adj = 0.5)
+dev.off()
+
+pdf(file = "plots/survey_common_high_with_feedback.pdf", width = 2.9)
+par(las=1, oma=c(2,0,0,0))
+plot(0:1, 0:1, xlim=c(1,5), ylim=range(0,10), type="n", axes=FALSE, ann=FALSE)
+vioplot(unlist(survey_recall_h_fb), unlist(survey_recognize_h_fb), unlist(survey_motivation_h_fb), unlist(survey_audib_help_h_fb), unlist(survey_audible_h_fb),
+        unlist(survey_discern_h_fb), unlist(survey_annoying_h_fb),unlist(survey_too_weak_h_fb), unlist(survey_too_strong_h_fb), horizontal = TRUE, col='lightpink', add = TRUE)
+axis(side=1,at=1:5,labels=c("agree", "weak agree", "neutral", "weak disagree", "disagree"), las=2)
+text(3,11,"Group B-F", xpd = TRUE, cex = 1.1, font=2, adj = 0.5)
+dev.off()
+
 
 # Questions of only Low- & HighDistraction
 survey_knew_game_l  <- map(results_low, function(list) {list$survey_post_results$`Ich kannte das Spiel bereits gut`})
@@ -82,11 +121,30 @@ survey_req_focus_h  <- map(results_high, function(list) {list$survey_post_result
 survey_fun_h        <- map(results_high, function(list) {list$survey_post_results$`Das Spiel hat mir Spaß gemacht.`})
 survey_motivation_game_h <- map(results_high, function(list) {list$survey_post_results$`Ich war motiviert, das Spiel bestmöglichst zu spielen.`})
 
+survey_knew_game_l_fb  <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Ich kannte das Spiel bereits gut`})
+survey_focus_vib_l_fb  <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Ich habe mich während des Spiels auf die Vibrationsmuster konzentriert.`})
+survey_focus_game_l_fb <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Ich habe mich auf das Spiel konzentriert.`})
+survey_distr_vib_l_fb  <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Die Vibration hat vom Spiel abgelenkt.`})
+survey_distr_num_l_fb  <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Die Zahlwörter haben vom Spiel abgelenkt.`})
+survey_req_focus_l_fb  <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Das Spiel hat meine volle Aufmerksamkeit erfordert.`})
+survey_fun_l_fb        <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Das Spiel hat mir Spaß gemacht.`})
+survey_motivation_game_l_fb <- map(results_low_with_feedback, function(list) {list$survey_post_results$`Ich war motiviert, das Spiel bestmöglichst zu spielen.`})
+
+survey_knew_game_h_fb  <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Ich kannte das Spiel bereits gut`})
+survey_focus_vib_h_fb  <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Ich habe mich während des Spiels auf die Vibrationsmuster konzentriert.`})
+survey_focus_game_h_fb <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Ich habe mich auf das Spiel konzentriert.`})
+survey_distr_vib_h_fb  <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Die Vibration hat vom Spiel abgelenkt.`})
+survey_distr_num_h_fb  <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Die Zahlwörter haben vom Spiel abgelenkt.`})
+survey_req_focus_h_fb  <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Das Spiel hat meine volle Aufmerksamkeit erfordert.`})
+survey_fun_h_fb        <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Das Spiel hat mir Spaß gemacht.`})
+survey_motivation_game_h_fb <- map(results_high_with_feedback, function(list) {list$survey_post_results$`Ich war motiviert, das Spiel bestmöglichst zu spielen.`})
+
+
 pdf(file = "plots/survey_distraction_low.pdf", width = 6.3)
 par(las=1, oma=c(2,13,0,0))
 plot(0:1, 0:1, xlim=c(1,5), ylim=range(0,9), type="n", axes=FALSE, ann=FALSE)
 vioplot(unlist(survey_knew_game_l), unlist(survey_focus_vib_l), unlist(survey_focus_game_l), unlist(survey_distr_vib_l), unlist(survey_distr_num_l),
-        unlist(survey_req_focus_l), unlist(survey_fun_l), unlist(survey_motivation_game_l), horizontal = TRUE, col='khaki1', add = TRUE)
+        unlist(survey_req_focus_l), unlist(survey_fun_l), unlist(survey_motivation_game_l), horizontal = TRUE, col='lightyellow', add = TRUE)
 axis(side=1,at=1:5,labels=c("agree", "weak agree", "neutral", "weak disagree", "disagree"), las = 2)
 axis(side=2,at=1:8,c("I knew the game", "I focused on the vibration", "I focused on the game", "Vibration was distracting", "Hearing numbers was distracting", "The game required full attention", "The game was fun", "I was motivated to play the best"))
 text(3,10,"Group A", xpd = TRUE, cex = 1.1, font = 2, adj = 0.5)
@@ -99,6 +157,24 @@ vioplot(unlist(survey_knew_game_h), unlist(survey_focus_vib_h), unlist(survey_fo
         unlist(survey_req_focus_h), unlist(survey_fun_h), unlist(survey_motivation_game_h), horizontal = TRUE, col='lightpink', add = TRUE)
 axis(side=1,at=1:5,labels=c("agree", "weak agree", "neutral", "weak disagree", "disagree"), las=2)
 text(3,10,"Group B", xpd = TRUE, cex = 1.1, font=2, adj = 0.5)
+dev.off()
+
+pdf(file = "plots/survey_distraction_low_feedback.pdf", width = 3.7)
+par(las=1, oma=c(2,0,0,0))
+plot(0:1, 0:1, xlim=c(1,5), ylim=range(0,9), type="n", axes=FALSE, ann=FALSE)
+vioplot(unlist(survey_knew_game_l_fb), unlist(survey_focus_vib_l_fb), unlist(survey_focus_game_l_fb), unlist(survey_distr_vib_l_fb), unlist(survey_distr_num_l_fb),
+        unlist(survey_req_focus_l_fb), unlist(survey_fun_l_fb), unlist(survey_motivation_game_l_fb), horizontal = TRUE, col='lightyellow', add = TRUE)
+axis(side=1,at=1:5,labels=c("agree", "weak agree", "neutral", "weak disagree", "disagree"), las=2)
+text(3,10,"Group A-F", xpd = TRUE, cex = 1.1, font=2, adj = 0.5)
+dev.off()
+
+pdf(file = "plots/survey_distraction_high_feedback.pdf", width = 3.7)
+par(las=1, oma=c(2,0,0,0))
+plot(0:1, 0:1, xlim=c(1,5), ylim=range(0,9), type="n", axes=FALSE, ann=FALSE)
+vioplot(unlist(survey_knew_game_h_fb), unlist(survey_focus_vib_h_fb), unlist(survey_focus_game_h_fb), unlist(survey_distr_vib_h_fb), unlist(survey_distr_num_h_fb),
+        unlist(survey_req_focus_h_fb), unlist(survey_fun_h_fb), unlist(survey_motivation_game_h_fb), horizontal = TRUE, col='lightpink', add = TRUE)
+axis(side=1,at=1:5,labels=c("agree", "weak agree", "neutral", "weak disagree", "disagree"), las=2)
+text(3,10,"Group B-F", xpd = TRUE, cex = 1.1, font=2, adj = 0.5)
 dev.off()
 
 # only for NoDistraction

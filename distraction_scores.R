@@ -29,15 +29,23 @@ phl_df_full_plot <- function(df, xmin, xmax, ymin, ymax, lightcolor, darkcolor, 
   apply(df, 1, function(row) {lines(row)})
 }
 
-# Open Hexagon scores
+
+
+# Group B - Open Hexagon scores
 gs_high = data.frame(matrix(unlist(map(list.map(results_high, test_results$distraction$open_hexagon), function(study) { list.remove(study, c("-1", "-2", 100, 101, 102)) })), nrow = 10, byrow = TRUE)) # without dry and test runs, just 0-11
-a = map(list.map(results_high, test_results$distraction$open_hexagon), function(study) { list.remove(study, c("-1", "-2")) })
-unlist(a[[1]])
 gs_high_dry = data.frame(matrix(unlist(map(list.map(results_high, test_results$distraction$open_hexagon), function(study) { list.remove(study, c("-1", "-2", 0:11)) })), nrow = 10, byrow = TRUE)) # only dry run
 gs_high_all = data.frame(matrix(unlist(map(list.map(results_high, test_results$distraction$open_hexagon), function(study) { list.remove(study, c("-1", "-2")) })), nrow = 10, byrow = TRUE)) # all
+#a = map(list.map(results_high, test_results$distraction$open_hexagon), function(study) { list.remove(study, c("-1", "-2")) })
+#unlist(a[[1]])
 
 # Game runs
+pdf(file = "plots/open_hexagon_scores_no_dry.pdf", width = 5)
 phl_df_plot(gs_high, 1, 12, -300, 0, "lightpink", "red2", "Training session", "Open Hexagon score (number of deaths as negative score)", 6.5, -250, "Group B")
+dev.off()
+
+pdf(file = "plots/open_hexagon_scores_no_dry_full.pdf", width = 5)
+phl_df_full_plot(gs_high, 1, 12, -300, 0, "lightpink", "red2", "Training session", "Open Hexagon score (number of deaths as negative score)", 6.5, -250, "Group B")
+dev.off()
 
 # all runs
 pdf(file = "plots/open_hexagon_scores.pdf", width = 5)
@@ -63,6 +71,7 @@ lines(apply(df, 2, max), col=darkcolor, lty=3)
 legend(8, -250, legend=c("Mean", "Median", "Upper/lower quartile", "Min/max"), col=c(darkcolor, darkcolor, darkcolor, darkcolor), lty=c(1,5,2,3), cex=0.8, bg = "white")
 dev.off()
 
+# all runs, full
 pdf(file = "plots/open_hexagon_scores_full.pdf")
 df = gs_high_all
 darkcolor = "red2"
@@ -85,29 +94,29 @@ apply(df, 1, function(row) {lines(row)})
 dev.off()
 
 
-t.test(gs_high_dry$X1, gs_high$X4, alternative = "two.sided", paired = T)
-t.test(gs_high_dry$X1, gs_high$X5, alternative = "two.sided", paired = T)
 
-(mean(gs_high_dry$X1) - mean(gs_high$X4)) / mean(gs_high_dry$X1)
-(mean(gs_high_dry$X1) - mean(gs_high$X5)) / mean(gs_high_dry$X1)
+# Group B-F - Open Hexagon scores - WITH FEEDBACK
+# (there are no dry runs)
+gs_high_fb_all = data.frame(matrix(unlist(map(list.map(results_high_with_feedback, test_results$distraction$open_hexagon), function(study) { list.remove(study, c("-1", "-2")) })), nrow = 9, byrow = TRUE))
 
-t.test(gs_high_dry$X2, gs_high$X8, alternative = "two.sided", paired = T)
-t.test(gs_high_dry$X2, gs_high$X9, alternative = "two.sided", paired = T)
+## Game runs
+pdf(file = "plots/open_hexagon_scores_feedback_no_dry.pdf", width = 5)
+phl_df_plot(gs_high_fb_all, 1, 12, -300, 0, "lightpink", "red2", "Training session", "Open Hexagon score (number of deaths as negative score)", 6.5, -250, "Group B-F")
+dev.off()
 
-boxplot(gs_high_dry$X2, gs_high$X9)
+pdf(file = "plots/open_hexagon_scores_feedback_no_dry_full.pdf", width = 5)
+phl_df_full_plot(gs_high_fb_all, 1, 12, -300, 0, "lightpink", "red2", "Training session", "Open Hexagon score (number of deaths as negative score)", 6.5, -250, "Group B-F")
+dev.off()
 
-t.test(gs_high_dry$X3, gs_high$X12, alternative = "two.sided", paired = T)
 
-apply(gs_high, 1, function(row) {lines(row)})
 
-mean(unlist((gs_high$X12 - gs_high$X1) / gs_high$X12))
-mean(unlist((gs_high$X12 - gs_high$X1) / abs(gs_high$X12)))
-
-# Gweled scores
+# Group A - Gweled scores
 gs_low = data.frame(matrix(unlist(map(list.map(results_low, test_results$distraction$gweled), function(study) { list.remove(study, c("-1", "-2", 100, 101, 102)) })), nrow = 10, byrow = TRUE)) # without dry and test runs, just 0-11
 gs_low_all = data.frame(matrix(unlist(map(list.map(results_low, test_results$distraction$gweled), function(study) { list.remove(study, c("-1", "-2")) })), nrow = 10, byrow = TRUE)) # without starter scores
 
+pdf(file = "plots/gweled_scores_no_dry.pdf", width = 5)
 phl_df_plot(gs_low, 1, 12, 0, 550, "lightyellow", "yellow4", "Training session", "Gweled score (number of symbols removed)", 6.5, 100, "Group A")
+dev.off()
 
 pdf(file = "plots/gweled_scores.pdf", width = 5)
 df = gs_low_all
@@ -152,6 +161,43 @@ lines(apply(df, 2, quantile, probs = 0.75), col=darkcolor, lty = 2)
 #legend(8, 100, legend=c("Mean", "Median", "Upper/lower quartile", "Min/max"), col=c(darkcolor, darkcolor, darkcolor, darkcolor), lty=c(1,5,2,3), cex=0.8, bg = "white")
 apply(df, 1, function(row) {lines(row)})
 dev.off()
+
+
+
+# Group A-F - Gweled scores
+# (there are no dry runs)
+gs_low_fb_all = data.frame(matrix(unlist(map(list.map(results_low_with_feedback, test_results$distraction$gweled), function(study) { list.remove(study, c("-1", "-2")) })), nrow = 11, byrow = TRUE)) # without starter scores
+
+pdf(file = "plots/gweled_scores_feedback_no_dry.pdf", width = 5)
+phl_df_plot(gs_low_fb_all, 1, 12, 0, 550, "lightyellow", "yellow4", "Training session", "Gweled score (number of symbols removed)", 6.5, 100, "Group A-F")
+dev.off()
+
+pdf(file = "plots/gweled_scores_feedback_no_dry_full.pdf", width = 5)
+phl_df_full_plot(gs_low_fb_all, 1, 12, 0, 550, "lightyellow", "yellow4", "Training session", "Gweled score (number of symbols removed)", 6.5, 100, "Group A-F")
+dev.off()
+
+
+
+####### Calculations for document #######
+# t.test(gs_high_dry$X1, gs_high$X4, alternative = "two.sided", paired = T)
+# t.test(gs_high_dry$X1, gs_high$X5, alternative = "two.sided", paired = T)
+# 
+# (mean(gs_high_dry$X1) - mean(gs_high$X4)) / mean(gs_high_dry$X1)
+# (mean(gs_high_dry$X1) - mean(gs_high$X5)) / mean(gs_high_dry$X1)
+# 
+# t.test(gs_high_dry$X2, gs_high$X8, alternative = "two.sided", paired = T)
+# t.test(gs_high_dry$X2, gs_high$X9, alternative = "two.sided", paired = T)
+# 
+# boxplot(gs_high_dry$X2, gs_high$X9)
+# 
+# t.test(gs_high_dry$X3, gs_high$X12, alternative = "two.sided", paired = T)
+# 
+# apply(gs_high, 1, function(row) {lines(row)})
+# 
+# mean(unlist((gs_high$X12 - gs_high$X1) / gs_high$X12))
+# mean(unlist((gs_high$X12 - gs_high$X1) / abs(gs_high$X12)))
+###
+
 
 
 ####### Calculations for document #######

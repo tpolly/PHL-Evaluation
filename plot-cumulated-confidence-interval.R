@@ -101,6 +101,14 @@ mrd <- function(results) {
   return(df)
 }
 
+mrs_with_null_patterns <- function(results) {
+  return(data.frame(matrix(unlist(map(list.map(results, map(test_results$recognize, function(set) { mean(unlist(list.map(set, correct))) })), function(study) { list.remove(study, 13) })), nrow = length(results), byrow = TRUE)))
+}
+
+mrs <- function(results) {
+  return(data.frame(matrix(unlist(map(map(list.map(results, map(test_results$recognize, function(set) { list.filter(set, !is.null(digit)) })), function(study) { map(study, function(set) {mean(unlist(list.map(set, correct)) ) }) }), function(study) {list.remove(study, 13)})), nrow = length(results), byrow = TRUE)))
+}
+
 mcd <- function(results) {
   subsetscore <- function(subset) {
     return(min(subset$distance / length(subset$correct_answer), 1)) # cap error score at 1
@@ -124,6 +132,10 @@ mcd <- function(results) {
   ))
   
   return(df)
+}
+
+mcs <- function(results) {
+  data.frame(matrix(unlist(map(list.map(results, map(test_results$construct, function(set) { mean(unlist(list.map(set, correct))) })), function(study) {list.remove(study, 13) })), nrow = length(results), byrow = TRUE))
 }
 
 mrplc <- function(results) { # mean recognize pattern length correct
@@ -249,37 +261,72 @@ for (dist in c("no", "low", "high", "low_with_feedback", "high_with_feedback")) 
 #for (dist in c("low_with_feedback")) {
   setwd("/opt/BA/Evaluation/plots")
   # recognize
-  pdf(file = paste0(dist, "_dist_recognize_with_nonsense.pdf"))
+  ## using distance metric
+  pdf(file = paste0(dist, "_mean_recognize_distance_with_null_patterns.pdf"))
     phl_df_plot(mrd_with_null_patterns(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test mean error rate", 1, 1, paste("Group", group(dist), "Recognize Error (including non-existing patterns)"))
   dev.off()
   
-  pdf(file = paste0(dist, "_dist_recognize_with_nonsense_full.pdf"))
+  pdf(file = paste0(dist, "_mean_recognize_distance_with_null_patterns_full.pdf"))
     phl_df_full_plot(mrd_with_null_patterns(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test mean error rate", 1, 1, paste("Group", group(dist), "Recognize Error (including non-existing patterns)"))
   dev.off()
   
-  pdf(file = paste0(dist, "_dist_recognize_without_nonsense.pdf"))
+  pdf(file = paste0(dist, "_mean_recognize_distance_without_null_patterns.pdf"))
     phl_df_plot(mrd(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test mean error rate", 1, 1, paste("Group", group(dist), "Recognize Error (excluding non-existing patterns)"))
   dev.off()
   
-  pdf(file = paste0(dist, "_dist_recognize_without_nonsense_5.pdf"), width = 5)
+  pdf(file = paste0(dist, "_mean_recognize_distance_without_null_patterns_5.pdf"), width = 5)
     phl_df_plot(mrd(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test mean error rate", 1, 0.3, paste("Group", group(dist), "Recognize Error"))
   dev.off()
   
-  pdf(file = paste0(dist, "_dist_recognize_without_nonsense_full.pdf"))
+  pdf(file = paste0(dist, "_mean_recognize_distance_without_null_patterns_full.pdf"))
     phl_df_full_plot(mrd(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test mean error rate", 1, 1, paste("Group", group(dist), "Recognize Error (excluding non-existing patterns)"))
+  dev.off()
+  ## using score metric
+  pdf(file = paste0(dist, "_mean_recognize_score_with_null_patterns.pdf"))
+    phl_df_plot(mrs_with_null_patterns(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test correct patterns", 1, 1, paste("Group", group(dist), "Recognize Error (including non-existing patterns)"))
+  dev.off()
+  
+  pdf(file = paste0(dist, "_mean_recognize_score_with_null_patterns_full.pdf"))
+    phl_df_full_plot(mrs_with_null_patterns(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test correct patterns", 1, 1, paste("Group", group(dist), "Recognize Error (including non-existing patterns)"))
+  dev.off()
+  
+  pdf(file = paste0(dist, "_mean_recognize_score_without_null_patterns.pdf"))
+    phl_df_plot(mrs(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test correct patterns", 1, 1, paste("Group", group(dist), "Recognize Error (excluding non-existing patterns)"))
+  dev.off()
+  
+  pdf(file = paste0(dist, "_mean_recognize_score_without_null_patterns_5.pdf"), width = 5)
+    phl_df_plot(mrs(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test correct patterns", 1, 0.3, paste("Group", group(dist), "Recognize Error"))
+  dev.off()
+  
+  pdf(file = paste0(dist, "_mean_recognize_score_without_null_patterns_full.pdf"))
+    phl_df_full_plot(mrs(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recognize test correct patterns", 1, 1, paste("Group", group(dist), "Recognize Error (excluding non-existing patterns)"))
   dev.off()
   
   # recall
-  pdf(file = paste0(dist, "_dist_recall.pdf"))
+  ## using distance metric
+  pdf(file = paste0(dist, "_mean_recall_distance.pdf"))
     phl_df_plot(mcd(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recall test mean error rate", 1, 0.3, paste("Group", group(dist), "Recall Error"))
   dev.off()
   
-  pdf(file = paste0(dist, "_dist_recall_5.pdf"), width = 5)
+  pdf(file = paste0(dist, "_mean_recall_distance_5.pdf"), width = 5)
     phl_df_plot(mcd(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recall test mean error rate", 1, 0.3, paste("Group", group(dist), "Recall Error"))
   dev.off()
   
-  pdf(file = paste0(dist, "_dist_recall_full.pdf"))
+  pdf(file = paste0(dist, "_mean_recall_distance_full.pdf"))
     phl_df_full_plot(mcd(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recall test mean error rate", 1, 0.3, paste("Group", group(dist), "Recall Error"))
+  dev.off()
+  
+  ## using score metric
+  pdf(file = paste0(dist, "_mean_recall_score.pdf"))
+    phl_df_plot(mcs(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recall test correct patterns", 1, 0.3, paste("Group", group(dist), "Recall Error"))
+  dev.off()
+  
+  pdf(file = paste0(dist, "_mean_recall_score_5.pdf"), width = 5)
+    phl_df_plot(mcs(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recall test correct patterns", 1, 0.3, paste("Group", group(dist), "Recall Error"))
+  dev.off()
+  
+  pdf(file = paste0(dist, "_mean_recall_score_full.pdf"))
+    phl_df_full_plot(mcs(results_h(dist)), 1, 12, 0, 1, lightcolor(dist), darkcolor(dist), "Training session", "Recall test correct patterns", 1, 0.3, paste("Group", group(dist), "Recall Error"))
   dev.off()
   
   # mean pattern length of correct pattern in recall test
@@ -287,41 +334,11 @@ for (dist in c("no", "low", "high", "low_with_feedback", "high_with_feedback")) 
     phl_df_plot(mccpl(results_h(dist)), 1, 12, 0, 5, lightcolor(dist), darkcolor(dist), "Training session", "Mean pattern length", 5 , 5, paste("Group", group(dist)))
   dev.off()
   
-  pdf(file = paste0(dist, "_dist_learned_by_length.pdf"), width = 3, height = 3)
+  pdf(file = paste0(dist, "_mean_learned_by_length.pdf"), width = 3, height = 3)
     mp <- barplot(unlist(meanscore(results_h(dist))) / c(1,2,3,4), col = lightcolor(dist), xlab = "Pattern length", ylab = "Percentage learned", main = paste("Group", group(dist)), ylim = 0:1)
     axis(1, c(1,2,3,4), at = mp)
   dev.off()
 }
-
-# === recognize test ===
-# high distraction recognize score with nonsense patterns
-
-mrs_high_df = data.frame(matrix(unlist(map(list.map(results_high, map(test_results$recognize, function(set) { mean(unlist(list.map(set, correct))) })), function(study) { list.remove(study, 13) })), nrow = 10, byrow = TRUE))
-mrs_high_no_nulls_df = data.frame(matrix(unlist(map(map(list.map(results_high, map(test_results$recognize, function(set) { list.filter(set, !is.null(digit)) })), function(study) { map(study, function(set) {mean(unlist(list.map(set, correct)) ) }) }), function(study) {list.remove(study, 13)})), nrow = 10, byrow = TRUE))
-mrs_low_df = data.frame(matrix(unlist(map(list.map(results_low, map(test_results$recognize, function(set) { mean(unlist(list.map(set, correct))) })), function(study) { list.remove(study, 13) })), nrow = 10, byrow = TRUE))
-mrs_low_no_nulls_df = data.frame(matrix(unlist(map(map(list.map(results_low, map(test_results$recognize, function(set) { list.filter(set, !is.null(digit)) })), function(study) { map(study, function(set) {mean(unlist(list.map(set, correct)) ) }) }), function(study) {list.remove(study, 13)})), nrow = 10, byrow = TRUE))
-mrs_no_no_nulls_df = data.frame(matrix(unlist(map(map(list.map(results_no, map(test_results$recognize, function(set) { list.filter(set, !is.null(digit)) })), function(study) { map(study, function(set) {mean(unlist(list.map(set, correct)) ) }) }), function(study) {list.remove(study, 13)})), nrow = 10, byrow = TRUE))
-
-
-# === construct test ===
-
-# high distraction construct score
-mcs_high_df = data.frame(matrix(unlist(map(list.map(results_high, map(test_results$construct, function(set) { sum(unlist(list.map(set, correct))) })), function(study) {list.remove(study, 13) })), nrow = 10, byrow = TRUE))
-pdf(file = "high_dist_construct_score.pdf", width = 5)
-phl_df_plot(mcs_high_df, 1, 12, 0, 10, "lightpink", "red2", "Training session", "Correct patterns in recall test (10 total)", 1, 10, "Group B")
-dev.off()
-
-# low distraction construct score
-mcs_low_df = data.frame(matrix(unlist(map(list.map(results_low, map(test_results$construct, function(set) { sum(unlist(list.map(set, correct))) })), function(study) {list.remove(study, 13) })), nrow = 10, byrow = TRUE))
-pdf(file = "low_dist_construct_score.pdf", width = 5)
-phl_df_plot(mcs_low_df, 1, 12, 0, 10, "khaki", "khaki4", "Training session", "Correct patterns in recall test (10 total)", 1, 10, "Group A")
-dev.off()
-
-# no distraction construct score
-mcs_no_df = data.frame(matrix(unlist(map(list.map(results_no, map(test_results$construct, function(set) { sum(unlist(list.map(set, correct))) })), function(study) {list.remove(study, 13) })), nrow = 10, byrow = TRUE))
-pdf(file = "no_dist_construct_score.pdf", width = 5)
-phl_df_plot(mcs_no_df, 1, 12, 0, 10, "lightgreen", "green3", "Training session", "Correct patterns in recall test (10 total)", 1, 10, "Group C")
-dev.off()
 
 ####### For document #######
 # t.test(mrd(results_low)$X1, mrd(results_low)$X12, paired = T)
@@ -351,7 +368,7 @@ dev.off()
 # means <- (mcd(results_low)$X12 + mcd(results_low)$X11) / 2
 # plot(density(means), ylim = c(0,5), xlim = c(0,1))
 # hist(means, add = T, breaks = 10)
-
-mean(mccpl(results_high)$X12)
-mean(mccpl(results_low)$X12)
+#
+# mean(mccpl(results_high)$X12)
+# mean(mccpl(results_low)$X12)
 ###

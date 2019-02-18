@@ -2,52 +2,52 @@
 setwd("/opt/BA/Results")
 source('load_results.R')
 
-# TODO: use rlist to filter nulls in pattern_distance or say that null means max distance = length
-# and decide how to deal with the first 4 subsets not containing numbers 5-9
-
-pdf(file = 'construct_test_pattern_distance.pdf')
-plot(range(1,13), range(0,5), type="n", xlab = "Subset", ylab = "Pattern distance")
-for (list in results) {
-  lines(unlist(map(list$test_results$construct, function(subset) {mean(unlist(map(subset, 'distance')))})), col = list$color)
-}
-dev.off()
-
-pdf(file = 'construct_test_pattern_correct.pdf')
-plot(range(1,13), range(0,1), type="n", xlab = "Subset", ylab = "Correct")
-for (list in results) {
-  lines(unlist(map(list$test_results$construct, function(subset) {mean(unlist(map(subset, 'correct')))})), col = list$color)
-}
-dev.off()
-
-pdf(file = 'construct_test_time_elapsed.pdf')
-plot(range(1,13), range(0,10), type="n", xlab = "Subset", ylab = "Time elapsed")
-for (list in results) {
-  lines(unlist(map(list$test_results$construct, function(subset) {mean(unlist(map(subset, 'time_elapsed')))})), col = list$color)
-}
-dev.off()
-
-
-
-pdf(file = 'recognize_test_pattern_distance.pdf')
-plot(range(1,13), range(0,5), type="n", xlab = "Subset", ylab = "Pattern distance")
-for (list in results) {
-  lines(unlist(map(list$test_results$recognize, function(subset) {mean(unlist(map(subset, 'pattern_distance')))})), col = list$color)
-}
-dev.off()
-
-pdf(file = 'recognize_test_pattern_correct.pdf')
-plot(range(1,13), range(0,1), type="n", xlab = "Subset", ylab = "Correct")
-for (list in results) {
-  lines(unlist(map(list$test_results$recognize, function(subset) {mean(unlist(map(subset, 'correct')))})), col = list$color)
-}
-dev.off()
-
-pdf(file = 'recognize_test_time_elapsed.pdf')
-plot(range(1,13), range(0,10), type="n", xlab = "Subset", ylab = "Time elapsed")
-for (list in results) {
-  lines(unlist(map(list$test_results$recognize, function(subset) {mean(unlist(map(subset, 'time_elapsed')), trim = 0.2)})), col = list$color)
-}
-dev.off()
+# OUTDATED - use plot-cumulated-confidence-interval.R
+# This plots every participant's score in one diagram (not very useful)
+#
+# pdf(file = 'construct_test_pattern_distance.pdf')
+# plot(range(1,13), range(0,5), type="n", xlab = "Subset", ylab = "Pattern distance")
+# for (list in results) {
+#   lines(unlist(map(list$test_results$construct, function(subset) {mean(unlist(map(subset, 'distance')))})), col = list$color)
+# }
+# dev.off()
+# 
+# pdf(file = 'construct_test_pattern_correct.pdf')
+# plot(range(1,13), range(0,1), type="n", xlab = "Subset", ylab = "Correct")
+# for (list in results) {
+#   lines(unlist(map(list$test_results$construct, function(subset) {mean(unlist(map(subset, 'correct')))})), col = list$color)
+# }
+# dev.off()
+# 
+# pdf(file = 'construct_test_time_elapsed.pdf')
+# plot(range(1,13), range(0,10), type="n", xlab = "Subset", ylab = "Time elapsed")
+# for (list in results) {
+#   lines(unlist(map(list$test_results$construct, function(subset) {mean(unlist(map(subset, 'time_elapsed')))})), col = list$color)
+# }
+# dev.off()
+# 
+# 
+# 
+# pdf(file = 'recognize_test_pattern_distance.pdf')
+# plot(range(1,13), range(0,5), type="n", xlab = "Subset", ylab = "Pattern distance")
+# for (list in results) {
+#   lines(unlist(map(list$test_results$recognize, function(subset) {mean(unlist(map(subset, 'pattern_distance')))})), col = list$color)
+# }
+# dev.off()
+# 
+# pdf(file = 'recognize_test_pattern_correct.pdf')
+# plot(range(1,13), range(0,1), type="n", xlab = "Subset", ylab = "Correct")
+# for (list in results) {
+#   lines(unlist(map(list$test_results$recognize, function(subset) {mean(unlist(map(subset, 'correct')))})), col = list$color)
+# }
+# dev.off()
+# 
+# pdf(file = 'recognize_test_time_elapsed.pdf')
+# plot(range(1,13), range(0,10), type="n", xlab = "Subset", ylab = "Time elapsed")
+# for (list in results) {
+#   lines(unlist(map(list$test_results$recognize, function(subset) {mean(unlist(map(subset, 'time_elapsed')), trim = 0.2)})), col = list$color)
+# }
+# dev.off()
 
 # todo: try plotting confidence bands, example like this:
 # df <- data.frame(x =1:10,

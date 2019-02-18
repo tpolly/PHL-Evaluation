@@ -12,5 +12,3 @@ dev.off()
 pdf(file="plots/armband_wrongs_1.pdf", width = 5)
 hist(unlist(armband_wrongs_1), breaks = seq(-0.5, 6, 1), xlab = "Number of errors in initial wrist band test", main = "Initial recognition test before retest")
 dev.off()
-
-sort(unlist(armband_wrongs_1))
